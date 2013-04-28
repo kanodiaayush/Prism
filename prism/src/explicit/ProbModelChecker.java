@@ -69,7 +69,9 @@ public class ProbModelChecker extends StateModelChecker
 	// Adversary export
 	protected boolean exportAdv = false;
 	protected String exportAdvFilename;
-
+	// Compute exact solutions
+	protected boolean exactSol = false;
+	
 	// Enums for flags/settings
 
 	// Method used for numerical solution
@@ -212,6 +214,9 @@ public class ProbModelChecker extends StateModelChecker
 			setExportAdv(true);
 		// PRISM_EXPORT_ADV_FILENAME
 		setExportAdvFilename(settings.getString(PrismSettings.PRISM_EXPORT_ADV_FILENAME));
+		
+		// PRISM_EXACT_SOLUTIONS
+		exactSol = settings.getBoolean(PrismSettings.PRISM_EXACT_SOLUTIONS);
 	}
 
 	/**

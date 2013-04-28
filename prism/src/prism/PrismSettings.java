@@ -99,6 +99,7 @@ public class PrismSettings implements Observer
 	public static final String PRISM_AR_OPTIONS					= "prism.arOptions";
 	public static final String PRISM_EXPORT_ADV					= "prism.exportAdv";
 	public static final String PRISM_EXPORT_ADV_FILENAME			= "prism.exportAdvFilename";
+	public static final String PRISM_EXACT_SOLUTIONS			= "prism.exactSolutions";
 	
 	public static final	String PRISM_MULTI_MAX_POINTS				= "prism.multiMaxIters";
 	public static final	String PRISM_PARETO_EPSILON					= "prism.paretoEpsilon";
@@ -265,8 +266,11 @@ public class PrismSettings implements Observer
 																			"Type of adversary to generate and export during MDP model checking" },
 			{ STRING_TYPE,		PRISM_EXPORT_ADV_FILENAME,				"Adversary export filename",			"3.3",			"adv.tra",																	"",															
 																			"Name of file for MDP adversary export (if enabled)" },
+			// GENERATE EXACT SOLUTIONS
+			{ BOOLEAN_TYPE,		PRISM_EXACT_SOLUTIONS,					"Compute exact solutions",				"4.0",			new Boolean(false),															"",
+																			"Gompute exact solutions" }
 		},
-		{
+		{	
 			{ INTEGER_TYPE,		SIMULATOR_DEFAULT_NUM_SAMPLES,			"Default number of samples",			"4.0",		new Integer(1000),			"1,",
 																			"Default number of samples when using approximate (simulation-based) model checking (CI/ACI/APMC methods)." },
 			{ DOUBLE_TYPE,		SIMULATOR_DEFAULT_CONFIDENCE,			"Default confidence parameter",			"4.0",		new Double(0.01),			"0,1",
@@ -1106,6 +1110,12 @@ public class PrismSettings implements Observer
 			}
 		}
 		
+		// EXACT SOLUTIONS
+		
+		else if (sw.equals("exactsol")) {
+			set(PRISM_EXACT_SOLUTIONS, true);
+		}
+		
 		// unknown switch - error
 		else {
 			throw new PrismException("Invalid switch -" + sw + " (type \"prism -help\" for full list)");
@@ -1164,6 +1174,7 @@ public class PrismSettings implements Observer
 		mainLog.println("-aroptions <string> ............ Abstraction-refinement engine options string");
 		mainLog.println("-exportadv <file> .............. Export an adversary from MDP model checking (as a DTMC)");
 		mainLog.println("-exportadvmdp <file> ........... Export an adversary from MDP model checking (as an MDP)");
+		mainLog.println("-exactsol....................... Compute exact solutions");
 		mainLog.println();
 		mainLog.println("MULTI-OBJECTIVE MODEL CHECKING:");
 		mainLog.println("-linprog (or -lp) .............. Use linear programming for multi-objective model checking");

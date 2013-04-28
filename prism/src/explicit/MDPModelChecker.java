@@ -39,6 +39,7 @@ import prism.PrismException;
 import prism.PrismFileLog;
 import prism.PrismLog;
 import prism.PrismUtils;
+import exactsol.ExactSolutionCalculator;
 import explicit.rewards.MDPRewards;
 
 /**
@@ -321,7 +322,6 @@ public class MDPModelChecker extends ProbModelChecker
 		BitSet no, yes;
 		int i, n, numYes, numNo;
 		long timer, timerProb0, timerProb1;
-		boolean genAdv;
 		// Local copy of setting
 		MDPSolnMethod mdpSolnMethod = this.mdpSolnMethod;
 
@@ -338,9 +338,6 @@ public class MDPModelChecker extends ProbModelChecker
 			if (!min) 
 				throw new PrismException("Value iteration from above only works for minimum probabilities");
 		}
-
-		// Are we generating an optimal adversary?
-		genAdv = exportAdv;
 
 		// Start probabilistic reachability
 		timer = System.currentTimeMillis();
@@ -363,14 +360,14 @@ public class MDPModelChecker extends ProbModelChecker
 
 		// Precomputation
 		timerProb0 = System.currentTimeMillis();
-		if (precomp && prob0) {
+		if ((precomp && prob0) || exactSol) {
 			no = prob0(mdp, remain, target, min);
 		} else {
 			no = new BitSet();
 		}
 		timerProb0 = System.currentTimeMillis() - timerProb0;
 		timerProb1 = System.currentTimeMillis();
-		if (precomp && prob1 && !genAdv) {
+		if (precomp && prob1 && !exportAdv) {
 			yes = prob1(mdp, remain, target, min);
 		} else {
 			yes = (BitSet) target.clone();
@@ -579,7 +576,9 @@ public class MDPModelChecker extends ProbModelChecker
 		long timer;
 
 		// Are we generating an optimal adversary?
-		genAdv = exportAdv;
+		// We generate an optimal adversary in case we are exporting it,
+		// or in case we want to compute exact solutions
+		genAdv = exportAdv || exactSol;
 
 		// Start value iteration
 		timer = System.currentTimeMillis();
@@ -653,7 +652,7 @@ public class MDPModelChecker extends ProbModelChecker
 		}
 		
 		// Process adversary
-		if (genAdv) {
+		if (exportAdv) {
 			// Prune adversary
 			restrictAdversaryToReachableStates(mdp, adv);
 			// Print adversary
@@ -665,6 +664,16 @@ public class MDPModelChecker extends ProbModelChecker
 			out.println();
 		}
 
+		if (exactSol) {
+			if(no.isEmpty() || unknown.isEmpty()) {
+				mainLog.printWarning("Exact solutions were required but results are already exact from pre-processing");
+			}
+			else {
+				ExactSolutionCalculator exact = new ExactSolutionCalculator(mainLog);
+				exact.computeExactSol(mdp, min, yes, no, unknown, adv);
+			}
+		}
+		
 		// Return results
 		res = new ModelCheckerResult();
 		res.soln = soln;

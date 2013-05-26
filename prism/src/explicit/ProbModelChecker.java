@@ -28,6 +28,8 @@ package explicit;
 
 import java.util.BitSet;
 
+import certificates.Prob0Info;
+
 import parser.ast.Expression;
 import parser.ast.ExpressionProb;
 import parser.ast.ExpressionReward;
@@ -71,6 +73,8 @@ public class ProbModelChecker extends StateModelChecker
 	protected String exportAdvFilename;
 	// Compute exact solutions
 	protected boolean exactSol = false;
+	// Generate certificates
+	protected boolean certificate = true;
 	
 	// Enums for flags/settings
 
@@ -217,6 +221,11 @@ public class ProbModelChecker extends StateModelChecker
 		
 		// PRISM_EXACT_SOLUTIONS
 		exactSol = settings.getBoolean(PrismSettings.PRISM_EXACT_SOLUTIONS);
+	
+	    // PRISM_CERTIFICATES
+		certificate = settings.getBoolean(PrismSettings.PRISM_CERTIFICATES);
+	    // If generating certificates, we need the exact solutions.
+		exactSol = exactSol || certificate;
 	}
 
 	/**
@@ -478,13 +487,15 @@ public class ProbModelChecker extends StateModelChecker
 			probs = ((CTMCModelChecker) this).checkProbPathFormula(model, expr.getExpression());
 			break;
 		case CTMDP:
-			probs = ((CTMDPModelChecker) this).checkProbPathFormula(model, expr.getExpression(), min);
+			probs = ((CTMDPModelChecker) this).checkProbPathFormula(model, expr.getExpression(), min,
+					(certificate ? new Prob0Info() : null));
 			break;
 		case DTMC:
 			probs = ((DTMCModelChecker) this).checkProbPathFormula(model, expr.getExpression());
 			break;
 		case MDP:
-			probs = ((MDPModelChecker) this).checkProbPathFormula(model, expr.getExpression(), min);
+			probs = ((MDPModelChecker) this).checkProbPathFormula(model, expr.getExpression(), min,
+					(certificate ? new Prob0Info() : null));
 			break;
 		/*case STPG:
 			probs = ((STPGModelChecker) this).checkProbPathFormula(model, expr.getExpression(), min);

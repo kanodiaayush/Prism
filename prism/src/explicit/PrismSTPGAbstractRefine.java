@@ -393,7 +393,7 @@ public class PrismSTPGAbstractRefine extends QuantAbstractRefine
 			mcMdp.inheritSettings(mcOptions);
 			switch (propertyType) {
 			case PROB_REACH:
-				res = mcMdp.computeReachProbs((MDP) modelConcrete, targetConcrete, min);
+				res = mcMdp.computeReachProbs((MDP) modelConcrete, targetConcrete, min, null);
 				break;
 			case PROB_REACH_BOUNDED:
 				res = mcMdp.computeBoundedReachProbs((MDP) modelConcrete, targetConcrete, reachBound, min);

@@ -26,6 +26,9 @@
 
 package explicit;
 
+import certificates.Certificate;
+import exactsol.ExactSolution;
+
 public class ModelCheckerResult
 {
 	// Solution vector
@@ -40,6 +43,9 @@ public class ModelCheckerResult
 	public double timePre = 0.0;
 	// Time taken for Prob0-type precomputation (secs)
 	public double timeProb0 = 0.0;
+	// Used if exact solutions are calculated.
+	public ExactSolution exactSoln;
+	public Certificate certificate;
 	
 	/**
 	 * Clear all stored data, including setting of array pointers to null

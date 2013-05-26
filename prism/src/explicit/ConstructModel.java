@@ -134,7 +134,7 @@ public class ConstructModel
 		if (modulesFile.getInitialStates() != null) {
 			throw new PrismException("Cannot do explicit-state reachability if there are multiple initial states");
 		}
-
+		
 		// Starting reachability...
 		mainLog.print("\nComputing reachable states...");
 		mainLog.flush();
@@ -306,6 +306,7 @@ public class ConstructModel
 		// Discard permutation
 		permut = null;
 
+		model.setVarNames(modulesFile.getVarNames());
 		return model;
 	}
 

@@ -31,6 +31,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.io.*;
 
+import certificates.Prob0Info;
+
 import explicit.rewards.MDPRewards;
 import prism.PrismException;
 import prism.PrismUtils;

@@ -1,28 +1,16 @@
 package exactsol;
 
 
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import parser.ast.Expression;
-import parser.ast.ModulesFile;
-import parser.ast.PropertiesFile;
-import prism.PrismException;
-import prism.PrismLangException;
 import prism.PrismLog;
-import prism.PrismSettings;
-import prism.Result;
-import explicit.Distribution;
 import explicit.MDP;
-import explicit.MDPSimple;
-import explicit.PrismExplicit;
 import external.glpk.*;
 
 public class ExactSolutionCalculator {
@@ -37,19 +25,20 @@ public class ExactSolutionCalculator {
 		this.mainLog = mainLog;
 	}
 
-	public void computeExactSol(MDP mdp, boolean min, BitSet yes, BitSet no, BitSet unknown,
-			int[] adv) {
+	public ExactSolution computeExactSol(MDP mdp, boolean min, BitSet yes, BitSet no, BitSet unknown,
+			int[] adv, BitSet statesToObtain) {
 		System.loadLibrary("glpk");
 		long timer_exact_sol = System.currentTimeMillis();
-		glp_prob p = create_dual_lp_problem(mdp, min, yes, no, unknown, adv);
+		ExactSolution exactSol = solve_dual_lp_problem(mdp, min, yes, no, unknown, adv, statesToObtain);
 		getMainLog().println("Exact solution time: " + ((double)System.currentTimeMillis()-timer_exact_sol)/1000 + " seconds");
+		return exactSol;
 	}
 	
-	glp_prob create_dual_lp_problem(MDP model, boolean min, BitSet yesStates, BitSet no, BitSet maybe, int adv[]) {
+	ExactSolution solve_dual_lp_problem(MDP model, boolean min, BitSet yesStates, BitSet no, BitSet maybe, int adv[],
+			BitSet statesToObtain) {
 		glp_prob lp = glpk.glp_create_prob();
 		int maybeTrans=0;
-		
-		Iterable<Integer> initialStatesSet = model.getInitialStates();
+
 		/*if(filter != null) {
 			initialStatesSet = new ArrayList<Integer>();
 			for(int s = filter.nextSetBit(0); s >= 0; s = filter.nextSetBit(s+1)) {
@@ -98,14 +87,6 @@ public class ExactSolutionCalculator {
 			glpk.int_array_set(colIndices, i, 0);
 			glpk.double_array_set(colValues, i, 0);
 		}
-		
-		int initialStates=0;
-		for(int s : initialStatesSet) {
-			if(maybe.get(s)) {
-				initialStates++;
-			}
-		}
-
 		
 		int tranCount = 1;
 		
@@ -179,15 +160,15 @@ public class ExactSolutionCalculator {
 		SWIGTYPE_p_uint8_t num = glpk.uint8_t_array(1024), den = glpk.uint8_t_array(1024);
 		
 		esol_parm.setNum_variables(0);
-		esol_parm.setDual_num_variables(initialStates);
-		esol_parm.setDual_variables(glpk.int_array(initialStates));
-		esol_parm.setDual_vars_dens(glpk.uint8_t_arrayarray(initialStates));
-		esol_parm.setDual_vars_nums(glpk.uint8_t_arrayarray(initialStates));
+		esol_parm.setDual_num_variables(statesToObtain.cardinality());
+		esol_parm.setDual_variables(glpk.int_array(statesToObtain.cardinality()));
+		esol_parm.setDual_vars_dens(glpk.uint8_t_arrayarray(statesToObtain.cardinality()));
+		esol_parm.setDual_vars_nums(glpk.uint8_t_arrayarray(statesToObtain.cardinality()));
 		esol_parm.setSizes(1024);
 		esol_parm.setSolution_num(num);
 		esol_parm.setSolution_den(den);
 		int countInit = 0;
-		for(int s : initialStatesSet) {
+		for (int s = statesToObtain.nextSetBit(0); s >= 0; s = statesToObtain.nextSetBit(s+1)) {
 			if(maybe.get(s)) {
 				int k = stateToMaybe.get(s);
 				glpk.int_array_set(esol_parm.getDual_variables(),countInit,k);
@@ -247,15 +228,16 @@ public class ExactSolutionCalculator {
 		
 		getMainLog().println("Transitions in maybe states: " + maybeTrans);
 		
-		for(int i = 0; i < initialStates; i++) {
-			System.out.println("Initial state numerator: " + glpk.uint8_t_array2toString(glpk.uint8t_arrayarray_get(esol_parm.getDual_vars_nums(), i)));
-			System.out.println("Initial state denominator: " + glpk.uint8_t_array2toString(glpk.uint8t_arrayarray_get(esol_parm.getDual_vars_dens(), i)));			
+		for(int i = 0; i < countInit; i++) {
+			System.out.println(i+"State numerator: " + glpk.uint8_t_array2toString(glpk.uint8t_arrayarray_get(esol_parm.getDual_vars_nums(), i)));
+			System.out.println(i+"State denominator: " + glpk.uint8_t_array2toString(glpk.uint8t_arrayarray_get(esol_parm.getDual_vars_dens(), i)));			
 		}
 		
 		getMainLog().println("Exact solver time: " + ((double)System.currentTimeMillis()-exact_sol_timer)/1000 + " seconds");
 		
 		//System.out.println("Inexact LP took: " + unex + " seconds");
-		return lp;
+		return new ExactSolution(min, yesStates, no, maybe, statesToObtain, stateToMaybe,
+				esol_parm.getDual_vars_nums(), esol_parm.getDual_vars_dens());
 	}
 	
 }

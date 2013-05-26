@@ -29,6 +29,8 @@ package explicit;
 import java.util.*;
 import java.util.Map.Entry;
 
+import certificates.Prob0Info;
+
 import prism.PrismException;
 
 import explicit.rewards.*;
@@ -72,6 +74,7 @@ public interface MDP extends Model
 	 * @param u Set of states {@code u}
 	 * @param forall For-all or there-exists (true=for-all, false=there-exists)
 	 * @param result Store results here
+	 * @param prob0info 
 	 */
 	public void prob0step(BitSet subset, BitSet u, boolean forall, BitSet result);
 	

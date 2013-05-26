@@ -100,6 +100,7 @@ public class PrismSettings implements Observer
 	public static final String PRISM_EXPORT_ADV					= "prism.exportAdv";
 	public static final String PRISM_EXPORT_ADV_FILENAME			= "prism.exportAdvFilename";
 	public static final String PRISM_EXACT_SOLUTIONS			= "prism.exactSolutions";
+	public static final String PRISM_CERTIFICATES               = "prism.certificates";
 	
 	public static final	String PRISM_MULTI_MAX_POINTS				= "prism.multiMaxIters";
 	public static final	String PRISM_PARETO_EPSILON					= "prism.paretoEpsilon";
@@ -268,7 +269,11 @@ public class PrismSettings implements Observer
 																			"Name of file for MDP adversary export (if enabled)" },
 			// GENERATE EXACT SOLUTIONS
 			{ BOOLEAN_TYPE,		PRISM_EXACT_SOLUTIONS,					"Compute exact solutions",				"4.0",			new Boolean(false),															"",
-																			"Gompute exact solutions" }
+																			"Compute exact solutions" },
+																			// GENERATE CERTIFICATES
+			{ BOOLEAN_TYPE,		PRISM_CERTIFICATES,					"Generate certificates",				"4.0",			new Boolean(false),															"",
+																																			"Generate certificates" }
+																
 		},
 		{	
 			{ INTEGER_TYPE,		SIMULATOR_DEFAULT_NUM_SAMPLES,			"Default number of samples",			"4.0",		new Integer(1000),			"1,",
@@ -1116,6 +1121,10 @@ public class PrismSettings implements Observer
 			set(PRISM_EXACT_SOLUTIONS, true);
 		}
 		
+		else if (sw.equals("cert")) {
+			set(PRISM_CERTIFICATES, true);
+		}
+		
 		// unknown switch - error
 		else {
 			throw new PrismException("Invalid switch -" + sw + " (type \"prism -help\" for full list)");
@@ -1175,6 +1184,7 @@ public class PrismSettings implements Observer
 		mainLog.println("-exportadv <file> .............. Export an adversary from MDP model checking (as a DTMC)");
 		mainLog.println("-exportadvmdp <file> ........... Export an adversary from MDP model checking (as an MDP)");
 		mainLog.println("-exactsol....................... Compute exact solutions");
+		mainLog.println("-cert........................... Generate certificate");
 		mainLog.println();
 		mainLog.println("MULTI-OBJECTIVE MODEL CHECKING:");
 		mainLog.println("-linprog (or -lp) .............. Use linear programming for multi-objective model checking");

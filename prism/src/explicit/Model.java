@@ -220,4 +220,8 @@ public interface Model
 	 * Report info/stats about the model, tabulated, as a string.
 	 */
 	public String infoStringTable();
+	
+    public List<String> getVarNames();
+    
+    void setVarNames(List<String> varNames);
 }

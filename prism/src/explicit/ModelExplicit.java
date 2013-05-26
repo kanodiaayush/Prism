@@ -56,6 +56,8 @@ public abstract class ModelExplicit implements Model
 	protected List<State> statesList;
 	// Constant info (read only, just a pointer)
 	protected Values constantValues;
+	
+	private List<String> varNames;
 
 	// Mutators
 
@@ -333,5 +335,15 @@ public abstract class ModelExplicit implements Model
 		if (!initialStates.equals(model.initialStates))
 			return false;
 		return true;
+	}
+
+	@Override
+	public List<String> getVarNames() {
+		return varNames;
+	}
+
+	@Override
+	public void setVarNames(List<String> varNames) {
+		this.varNames = varNames;
 	}
 }

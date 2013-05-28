@@ -1316,7 +1316,6 @@ public class PrismSettings implements Observer
 			}
 		}
 
->>>>>>> master
 		// unknown switch - error
 		else {
 			throw new PrismException("Invalid switch -" + sw + " (type \"prism -help\" for full list)");

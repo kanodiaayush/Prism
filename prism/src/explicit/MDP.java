@@ -31,6 +31,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import certificates.Prob0Info;
+
 import prism.PrismException;
 import explicit.rewards.MCRewards;
 import explicit.rewards.MDPRewards;
@@ -59,6 +61,7 @@ public interface MDP extends NondetModel
 	 * @param u Set of states {@code u}
 	 * @param forall For-all or there-exists (true=for-all, false=there-exists)
 	 * @param result Store results here
+	 * @param prob0info 
 	 */
 	public void prob0step(BitSet subset, BitSet u, boolean forall, BitSet result);
 

@@ -28,6 +28,9 @@ package explicit;
 
 import strat.Strategy;
 
+import certificates.Certificate;
+import exactsol.ExactSolution;
+
 /**
  * Class storing some info/data from a call to a model checking or
  * numerical computation method in the explicit engine. 
@@ -49,6 +52,10 @@ public class ModelCheckerResult
 	// Strategy
 	public Strategy strat = null;
 
+	// Used if exact solutions are calculated.
+	public ExactSolution exactSoln;
+	public Certificate certificate;
+	
 	/**
 	 * Clear all stored data, including setting of array pointers to null
 	 * (which may be helpful for garbage collection purposes).

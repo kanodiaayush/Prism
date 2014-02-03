@@ -328,6 +328,7 @@ public class ConstructModel extends PrismComponent
 		// Discard permutation
 		permut = null;
 
+		model.setVarNames(modulesFile.getVarNames());
 		return model;
 	}
 

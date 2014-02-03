@@ -596,7 +596,7 @@ public class MDPSparse extends MDPExplicit
 			}
 		};
 	}
-
+	
 	@Override
 	public void prob0step(BitSet subset, BitSet u, boolean forall, BitSet result)
 	{

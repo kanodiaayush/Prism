@@ -28,6 +28,8 @@ package explicit;
 
 import java.util.BitSet;
 
+import certificates.Prob0Info;
+
 import parser.ast.Expression;
 import parser.ast.ExpressionProb;
 import parser.ast.ExpressionReward;
@@ -73,7 +75,11 @@ public class ProbModelChecker extends NonProbModelChecker
 	// Adversary export
 	protected boolean exportAdv = false;
 	protected String exportAdvFilename;
-
+	// Compute exact solutions
+	protected boolean exactSol = false;
+	// Generate certificates
+	protected boolean certificate = true;
+	
 	// Enums for flags/settings
 
 	// Method used for numerical solution
@@ -213,7 +219,15 @@ public class ProbModelChecker extends NonProbModelChecker
 				setExportAdv(true);
 			// PRISM_EXPORT_ADV_FILENAME
 			setExportAdvFilename(settings.getString(PrismSettings.PRISM_EXPORT_ADV_FILENAME));
-		}
+
+			// PRISM_EXACT_SOLUTIONS
+			exactSol = settings.getBoolean(PrismSettings.PRISM_EXACT_SOLUTIONS);
+		
+		    // PRISM_CERTIFICATES
+			certificate = settings.getBoolean(PrismSettings.PRISM_CERTIFICATES);
+		    // If generating certificates, we need the exact solutions.
+			exactSol = exactSol || certificate;
+		}		
 	}
 	
 	// Settings methods
@@ -487,13 +501,15 @@ public class ProbModelChecker extends NonProbModelChecker
 			probs = ((CTMCModelChecker) this).checkProbPathFormula(model, expr.getExpression());
 			break;
 		case CTMDP:
-			probs = ((CTMDPModelChecker) this).checkProbPathFormula((NondetModel) model, expr.getExpression(), min);
+			probs = ((CTMDPModelChecker) this).checkProbPathFormula((NondetModel) model, expr.getExpression(), min,
+					(certificate ? new Prob0Info() : null));
 			break;
 		case DTMC:
 			probs = ((DTMCModelChecker) this).checkProbPathFormula(model, expr.getExpression());
 			break;
 		case MDP:
-			probs = ((MDPModelChecker) this).checkProbPathFormula((NondetModel) model, expr.getExpression(), min);
+			probs = ((MDPModelChecker) this).checkProbPathFormula((NondetModel) model, expr.getExpression(), min,
+					(certificate ? new Prob0Info() : null));
 			break;
 		/*case STPG:
 			probs = ((STPGModelChecker) this).checkProbPathFormula(model, expr.getExpression(), min);

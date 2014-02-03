@@ -104,6 +104,8 @@ public class PrismSettings implements Observer
 	public static final String PRISM_AR_OPTIONS					= "prism.arOptions";
 	public static final String PRISM_EXPORT_ADV					= "prism.exportAdv";
 	public static final String PRISM_EXPORT_ADV_FILENAME			= "prism.exportAdvFilename";
+	public static final String PRISM_EXACT_SOLUTIONS			= "prism.exactSolutions";
+	public static final String PRISM_CERTIFICATES               = "prism.certificates";
 	
 	public static final	String PRISM_MULTI_MAX_POINTS				= "prism.multiMaxIters";
 	public static final	String PRISM_PARETO_EPSILON					= "prism.paretoEpsilon";
@@ -324,8 +326,15 @@ public class PrismSettings implements Observer
 																			"For fast adaptive uniformisation (FAU), the time period is split into this number of of intervals." },
 			{ DOUBLE_TYPE,      PRISM_FAU_INITIVAL,						"FAU initial time interval",			"4.1",   	 	new Double(1.0),     														"",	
 																			"For fast adaptive uniformisation (FAU), the length of initial time interval to analyse." },
+			// GENERATE EXACT SOLUTIONS
+			{ BOOLEAN_TYPE,		PRISM_EXACT_SOLUTIONS,					"Compute exact solutions",				"4.0",			new Boolean(false),															"",
+																			"Compute exact solutions" },
+																			// GENERATE CERTIFICATES
+			{ BOOLEAN_TYPE,		PRISM_CERTIFICATES,					"Generate certificates",				"4.0",			new Boolean(false),															"",
+																																			"Generate certificates" }
+																
 		},
-		{
+		{	
 			{ INTEGER_TYPE,		SIMULATOR_DEFAULT_NUM_SAMPLES,			"Default number of samples",			"4.0",		new Integer(1000),			"1,",
 																			"Default number of samples when using approximate (simulation-based) model checking (CI/ACI/APMC methods)." },
 			{ DOUBLE_TYPE,		SIMULATOR_DEFAULT_CONFIDENCE,			"Default confidence parameter",			"4.0",		new Double(0.01),			"0,1",
@@ -1213,8 +1222,20 @@ public class PrismSettings implements Observer
 			}
 		}
 		
-		// PARAMETRIC MODEL CHECKING:
+		// EXACT SOLUTIONS
 		
+		else if (sw.equals("exactsol")) {
+			set(PRISM_EXACT_SOLUTIONS, true);
+		}
+	
+        // CERTIFICATE GENERATION
+
+		else if (sw.equals("cert")) {
+			set(PRISM_CERTIFICATES, true);
+		}
+		
+        // PARAMETRIC MODEL CHECKING:
+
 		else if (sw.equals("param")) {
 			set(PRISM_PARAM_ENABLED, true);
 		}
@@ -1457,6 +1478,8 @@ public class PrismSettings implements Observer
 		mainLog.println("-aroptions <string> ............ Abstraction-refinement engine options string");
 		mainLog.println("-exportadv <file> .............. Export an adversary from MDP model checking (as a DTMC)");
 		mainLog.println("-exportadvmdp <file> ........... Export an adversary from MDP model checking (as an MDP)");
+		mainLog.println("-exactsol....................... Compute exact solutions");
+		mainLog.println("-cert........................... Generate certificate");
 		mainLog.println();
 		mainLog.println("MULTI-OBJECTIVE MODEL CHECKING:");
 		mainLog.println("-linprog (or -lp) .............. Use linear programming for multi-objective model checking");

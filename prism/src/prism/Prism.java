@@ -832,6 +832,11 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 		return settings.getString(PrismSettings.PRISM_EXPORT_ADV_FILENAME);
 	}
 
+	public boolean getComputeExactSolutions()
+	{
+		return settings.getBoolean(PrismSettings.PRISM_EXACT_SOLUTIONS);
+	}
+	
 	// Get methods for miscellaneous options
 
 	public boolean getExportPrism()

@@ -1,0 +1,8 @@
+*.o
+*.a
+*.so
+cudd/include
+prism/bin
+prism/classes
+prism/lib/lpsolve55j.jar
+obj/

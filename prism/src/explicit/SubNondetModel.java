@@ -401,4 +401,14 @@ public class SubNondetModel implements NondetModel {
 	public int translateAction(int s, int i) {
 		return actionLookupTable.get(s).get(i);
 	}
+
+	@Override
+	public List<String> getVarNames() {
+		return model.getVarNames();
+	}
+
+	@Override
+	public void setVarNames(List<String> varNames) {
+		model.setVarNames(varNames);
+	}
 }

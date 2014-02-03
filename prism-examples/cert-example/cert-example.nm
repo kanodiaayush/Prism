@@ -1,0 +1,12 @@
+mdp
+
+// Probability of moving forward towards state 13 is 0.5
+// Probability of jumping into the "trap" state 3 is 0.5
+// Probability of reaching 13 from 12 is 0.5, from 11 is 0.25, etc.
+
+module a
+  x: [0..13] init 0;
+[] (x!=3)&(x!=13)&(x!=2) -> 0.5:(x'=x+1)+0.5:(x'=3);
+[] (x=2) -> 0.5:(x'=4)+0.5:(x'=3);
+[] (x=3)|(x=13) -> (x'=x);
+endmodule

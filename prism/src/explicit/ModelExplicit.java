@@ -69,6 +69,8 @@ public abstract class ModelExplicit implements Model
 	 * represented as a String->BitSet mapping from their names to the states that satisfy them. */
 	protected Map<String,BitSet> labels = new TreeMap<String, BitSet>();
 	
+	private List<String> varNames;
+
 	// Mutators
 
 	/**
@@ -371,5 +373,15 @@ public abstract class ModelExplicit implements Model
 		if (!initialStates.equals(model.initialStates))
 			return false;
 		return true;
+	}
+
+	@Override
+	public List<String> getVarNames() {
+		return varNames;
+	}
+
+	@Override
+	public void setVarNames(List<String> varNames) {
+		this.varNames = varNames;
 	}
 }

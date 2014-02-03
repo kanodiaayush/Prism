@@ -682,7 +682,7 @@ public abstract class QuantAbstractRefine extends PrismComponent
 				mc.setValIterDir(MDPModelChecker.ValIterDir.BELOW);
 				// TODO
 			} else {
-				res = ((MDPModelChecker) mc).computeReachProbs((MDP) abstraction, target, true);
+				res = ((MDPModelChecker) mc).computeReachProbs((MDP) abstraction, target, true, null);
 			}
 			break;
 		case CTMDP:
@@ -690,7 +690,7 @@ public abstract class QuantAbstractRefine extends PrismComponent
 				mc.setValIterDir(MDPModelChecker.ValIterDir.BELOW);
 				// TODO
 			} else {
-				res = ((CTMDPModelChecker) mc).computeReachProbs((CTMDP) abstraction, target, true);
+				res = ((CTMDPModelChecker) mc).computeReachProbs((CTMDP) abstraction, target, true, null);
 			}
 			break;
 		case STPG:
@@ -718,14 +718,14 @@ public abstract class QuantAbstractRefine extends PrismComponent
 			if (optimise) {
 				// TODO
 			} else {
-				res = ((MDPModelChecker) mc).computeReachProbs((MDP) abstraction, target, false);
+				res = ((MDPModelChecker) mc).computeReachProbs((MDP) abstraction, target, false, null);
 			}
 			break;
 		case CTMDP:
 			if (optimise) {
 				// TODO
 			} else {
-				res = ((CTMDPModelChecker) mc).computeReachProbs((CTMDP) abstraction, target, false);
+				res = ((CTMDPModelChecker) mc).computeReachProbs((CTMDP) abstraction, target, false, null);
 			}
 			break;
 		case STPG:

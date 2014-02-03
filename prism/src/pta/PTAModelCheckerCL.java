@@ -180,7 +180,7 @@ public class PTAModelCheckerCL
 				ForwardsReach forwardsReach = new ForwardsReach();
 				ReachabilityGraph graph = forwardsReach.buildForwardsGraph(pta, targetLocs, targetConstraint);
 				MDP mdp = graph.buildMDP(forwardsReach.getInitialStates());
-				new MDPModelChecker(null).computeReachProbs(mdp, forwardsReach.getTarget(), min);
+				new MDPModelChecker(null).computeReachProbs(mdp, forwardsReach.getTarget(), min, null);
 			}
 
 		} catch (PrismException e) {
